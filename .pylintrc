@@ -142,7 +142,10 @@ good-names=x,
            m,
            n,
            i,
-           j
+           j,
+           y1,
+           y2,
+           r,
 
 # Naming style matching correct class attribute names
 class-attribute-naming-style=any
