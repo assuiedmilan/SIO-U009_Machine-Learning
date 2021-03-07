@@ -4,6 +4,8 @@ from typing import Tuple
 
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import minimize
+
 
 def quadratic_loss(y1: float, y2:float) -> float:
     """Compute the quadratic loss
@@ -121,15 +123,16 @@ class ValidationModel:
 
         return self.empiric_risk(theta) + r * self.regularize(theta)
 
-    def compute_objectives(self, r: float):
+    def compute_objectives(self, r: float) -> np.ndarray:
         """Compute all objectives results
 
         Args:
             r (float): tolerance
 
         Returns:
-
+            An array which contains the objective values
         """
+
         r_values = np.zeros((self.__number_of_points, self.__number_of_points))
 
         for i in range(0, self.__number_of_points):
