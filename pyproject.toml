@@ -1,0 +1,36 @@
+[build-system]
+requires = ["poetry_core>=1.1.4"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "SIO-U009_MachineLearning"
+version = "1.0.0"
+description = "H2020 - Scientific Python - Lavel University"
+authors = ["Milan Assuied"]
+readme = "README.md"
+repository = "https://github.com/assuiedmilan/SIO-U009_MachineLearning"
+
+packages = [
+    { include = "sio_u009"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+ipython = "*"
+numpy = "*"
+scipy = "*"
+matplotlib = "*"
+pandas = "*"
+patsy = "*"
+statsmodels = "*"
+seaborn = "*"
+scikit-learn = "0.24.1 "
+
+[tool.poetry.dev-dependencies]
+pylint = "*"
+mock = "*"
+pytest = "*"
+pytest-lazy-fixture = "*"
+pytest-timeout = "*"
+pytest-mock = "*"
+testfixtures = "*"
