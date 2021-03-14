@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sio_u009.algorithm_components import Polynomial
+from sio_u009.algorithm_components.polynomial import Polynomial
 
 
 def plot_polynomial_over(polynomial: Polynomial):

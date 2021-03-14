@@ -4,7 +4,6 @@ from typing import Tuple
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import minimize
 
 
 def quadratic_loss(y1: float, y2:float) -> float:

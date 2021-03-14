@@ -25,6 +25,8 @@ patsy = "*"
 statsmodels = "*"
 seaborn = "*"
 scikit-learn = "0.24.1 "
+wget = "*"
+plotnine = "*"
 
 [tool.poetry.dev-dependencies]
 pylint = "*"

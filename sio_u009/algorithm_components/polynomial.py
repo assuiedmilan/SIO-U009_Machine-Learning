@@ -40,6 +40,29 @@ class Polynomial:
 
         return self.__data
 
+    @property
+    def x(self) -> np.ndarray:
+        """Returns x values of the polynomial"""
+
+        return self.data[0]
+
+    @property
+    def y(self) -> np.ndarray:
+        """Returns y values of the polynomial"""
+
+        return self.data[1]
+
+    def value(self, x: [float, np.ndarray, np.poly1d]) -> np.ndarray:
+        """Returns the value at x
+
+        Args:
+            x (float, np.ndarray, np.poly1d): value over which to compute the polynomial values
+
+        Returns:
+            An array containing the values
+        """
+        return np.polyval(self.coefficients, x)
+
     def __compute_data(self, number_of_points: int):
         """Generate a number of points randomly over the polynomial function
 
@@ -51,5 +74,5 @@ class Polynomial:
         """
 
         x = np.random.uniform(-10, 10, number_of_points)
-        y = np.polyval(self.coefficients, x) + np.random.normal(0.0, 15.0, number_of_points)
+        y = self.value(x) + np.random.normal(0.0, 15.0, number_of_points)
         self.__data = x.reshape(-1, 1), y
