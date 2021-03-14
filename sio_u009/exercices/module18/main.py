@@ -5,14 +5,12 @@ import math
 import pandas as pd
 from pandas import DataFrame
 
-from sio_u009.exercices.module18 import simple_linear_regression
 from sio_u009.exercices.module18.data_tools import extract_test_and_training_set
 from sio_u009.exercices.module18.data_tools import get_all_flights_from_in_the_last_months
 from sio_u009.exercices.module18.data_tools import join_new_data_using_common_data
 from sio_u009.exercices.module18.datas import get_planes
 from sio_u009.exercices.module18.datas import get_weather
-from sio_u009.exercices.module18.simple_linear_regression import get_mean_quadratic_error
-from sio_u009.exercices.module18.simple_linear_regression import print_variability_percentage
+from sio_u009.exercices.module18.simple_linear_regression import SimpleLinearRegression
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.float_format', lambda x: '%.4f' % x)
@@ -23,10 +21,12 @@ def main():
     flights_datas = prepare_data()
     _, training_set = extract_test_and_training_set(flights_datas, 20)
 
-    simple_regression_model = simple_linear_regression.adjust_and_plot_model_for(training_set, 'arr_delay', 'dep_delay')
-    simple_regression_model.summary()
-    print_variability_percentage(simple_regression_model)
-    get_mean_quadratic_error(training_set, simple_regression_model)
+    simple_regression = SimpleLinearRegression(training_set)
+    simple_regression.adjust_and_plot_model_for('arr_delay', 'dep_delay')
+
+    simple_regression.model.summary()
+    simple_regression.print_variability_percentage()
+    simple_regression.get_mean_quadratic_error()
 
 
 def prepare_data() -> DataFrame:

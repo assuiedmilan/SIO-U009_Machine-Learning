@@ -7,79 +7,85 @@ from statsmodels.regression.linear_model import RegressionResultsWrapper
 
 from sio_u009.exercices.module18.plot_functions import plot_simple_regression_model
 
-
-def adjust_model_for(set_to_adjust: DataFrame, x_data_name, y_data_name) -> RegressionResultsWrapper:
-    """Compute a simple linear regression model for two data frame datas
-
-    Args:
-        set_to_adjust (DataFrame): The DataFrame
-        x_data_name (str): Data to be represented as abscess
-        y_data_name (str): Data to be represented as ordinates
-
-    Returns:
-        The wrapper containing the model data
-    """
-
-    return smf.ols('{} ~ {}'.format(x_data_name, y_data_name), set_to_adjust).fit()
-
-def adjust_and_plot_model_for(set_to_adjust: DataFrame, x_data_name, y_data_name) -> RegressionResultsWrapper:
-    """Compute a simple linear regression model for two data frame datas and plot it using ggplot
+class SimpleLinearRegression:
+    """A Simple Linear Regression class for data frames
 
     Args:
-        set_to_adjust (DataFrame): The DataFrame
-        x_data_name (str): Data to be represented as abscess
-        y_data_name (str): Data to be represented as ordinates
+       set_to_adjust (DataFrame): The DataFrame used for this model
 
-    Returns:
-        The wrapper containing the model data
+    Attributes:
+        __set_to_adjust (DataFrame): The DataFrame used for this model
+        __model (RegressionResultsWrapper): The model wrapper
+
     """
+    def __init__(self, set_to_adjust: DataFrame):
+        self.__set_to_adjust = set_to_adjust
+        self.__model = None
 
-    model = adjust_model_for(set_to_adjust, x_data_name, y_data_name)
-    plot_simple_regression_model(set_to_adjust, model)
+    @property
+    def model(self) -> RegressionResultsWrapper:
+        """The computed model"""
+        return self.__model
 
-    return model
+    def adjust_model_for(self, x_data_name, y_data_name) -> RegressionResultsWrapper:
+        """Compute a simple linear regression model for two data frame datas
+
+        Args:
+            x_data_name (str): Data to be represented as abscess
+            y_data_name (str): Data to be represented as ordinates
+
+        Returns:
+            The wrapper containing the model data
+        """
+
+        self.__model = smf.ols('{} ~ {}'.format(x_data_name, y_data_name), self.__set_to_adjust).fit()
+
+    def adjust_and_plot_model_for(self, x_data_name, y_data_name) -> RegressionResultsWrapper:
+        """Compute a simple linear regression model for two data frame datas and plot it using ggplot
+
+        Args:
+            x_data_name (str): Data to be represented as abscess
+            y_data_name (str): Data to be represented as ordinates
+
+        Returns:
+            The wrapper containing the model data
+        """
+
+        self.adjust_model_for(x_data_name, y_data_name)
+        plot_simple_regression_model(self.__set_to_adjust, self.__model)
 
 
-def get_variability_percentage(model: RegressionResultsWrapper) -> float:
-    """Return the variability percentage that explain the y-data by the x-data
 
-    Args:
-        model (RegressionResultsWrapper): The model wrapper
+    def get_variability_percentage(self) -> float:
+        """Return the variability percentage that explain the y-data by the x-data
 
-    Returns:
-        A float
-    """
+        Returns:
+            A float
+        """
 
-    return round(100*model.rsquared, 1)
+        return round(100*self.__model.rsquared, 1)
 
-def print_variability_percentage(model: RegressionResultsWrapper):
-    """Print the variability percentage that explain the y-data by the x-data
+    def print_variability_percentage(self):
+        """Print the variability percentage that explain the y-data by the x-data
 
-    Args:
-        model (RegressionResultsWrapper): The model wrapper
+        Returns:
+            None
+        """
 
-    Returns:
-        None
-    """
+        variability_percentage = self.get_variability_percentage()
+        _, x_name = self.__model.model.data.xnames
+        y_name = self.__model.model.data.ynames
 
-    variability_percentage = get_variability_percentage(model)
-    _, x_name = model.model.data.xnames
-    y_name = model.model.data.ynames
+        print("The percentage of the variability of {} is explained at {}% by {}".format(y_name, variability_percentage, x_name))
 
-    print("The percentage of the variability of {} is explained at {}% by {}".format(y_name, variability_percentage, x_name))
+    def get_mean_quadratic_error(self) -> float:
+        """Return the mean quadratic error expected if we use that model to predict the y-data by the x-data
 
-def get_mean_quadratic_error(data_frame: DataFrame, model: RegressionResultsWrapper) -> float:
-    """Return the mean quadratic error expected if we use that model to predict the y-data by the x-data
+        Returns:
+            A float
+        """
 
-    Args:
-        data_frame (DataFrame): The DataFrame used for this model
-        model (RegressionResultsWrapper): The model wrapper
+        _, x_name = self.__model.model.data.xnames
+        set_data_frame = DataFrame(getattr(self.__set_to_adjust, x_name))
 
-    Returns:
-        A float
-    """
-
-    _, x_name = model.model.data.xnames
-    set_data_frame = DataFrame(getattr(data_frame, x_name))
-
-    return eval_measures.rmse(getattr(data_frame, x_name), model.predict(set_data_frame)) ** 2
+        return eval_measures.rmse(getattr(self.__set_to_adjust, x_name), self.__model.predict(set_data_frame)) ** 2
